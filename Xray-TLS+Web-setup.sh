@@ -875,7 +875,7 @@ check_port()
     systemctl -q is-active xray && xray_status=1 && systemctl stop xray
     systemctl -q is-active nginx && nginx_status=1 && systemctl stop nginx
     ([ $xray_status -eq 1 ] || [ $nginx_status -eq 1 ]) && sleep 2s
-    local check_list=('80' '443')
+    local check_list=('81' '443')
     local i
     for i in "${check_list[@]}"
     do
@@ -2371,7 +2371,7 @@ http {
 
     include       $nginx_config;
     #server {
-        #listen       80;
+        #listen       81;
         #server_name  localhost;
 
         #charset koi8-r;
@@ -2392,7 +2392,7 @@ http {
         #    root   html;
         #}
 
-        # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+        # proxy the PHP scripts to Apache listening on 127.0.0.1:81
         #
         #location ~ \\.php\$ {
         #    proxy_pass   http://127.0.0.1;
@@ -2461,13 +2461,13 @@ config_nginx()
     local i
 cat > $nginx_config<<EOF
 server {
-    listen 80 reuseport default_server;
-    listen [::]:80 reuseport default_server;
+    listen 81 reuseport default_server;
+    listen [::]:81 reuseport default_server;
     return 301 https://${domain_list[0]};
 }
 server {
-    listen 80;
-    listen [::]:80;
+    listen 81;
+    listen [::]:81;
     server_name ${domain_list[@]};
     return 301 https://\$host\$request_uri;
 }
@@ -2480,8 +2480,8 @@ EOF
     if [ ${#temp_domain_list2[@]} -ne 0 ]; then
 cat >> $nginx_config<<EOF
 server {
-    listen 80;
-    listen [::]:80;
+    listen 81;
+    listen [::]:81;
     listen unix:/dev/shm/nginx/default.sock;
     listen unix:/dev/shm/nginx/h2.sock http2;
     server_name ${temp_domain_list2[@]};
